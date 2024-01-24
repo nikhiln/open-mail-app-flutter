@@ -26,6 +26,7 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 33
+    namespace 'com.homex.open_mail_app'
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
