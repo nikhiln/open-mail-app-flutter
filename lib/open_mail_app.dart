@@ -261,7 +261,7 @@ class OpenMailApp {
     if (appsJson != null) {
       apps = (jsonDecode(appsJson) as Iterable)
           .map((x) => MailApp.fromJson(x))
-          .where((app) => !_filterList.contains(app.name.toLowerCase()))
+          .where((app) => !filterList.any((filter) => app.name.toLowerCase().contains(filter)))
           .toList();
     }
 
@@ -272,7 +272,7 @@ class OpenMailApp {
     var installedApps = <MailApp>[];
     for (var app in _supportedMailApps) {
       if (await canLaunch(app.iosLaunchScheme) &&
-          !_filterList.contains(app.name.toLowerCase())) {
+          !filterList.any((filter) => app.name.toLowerCase().contains(filter))) {
         installedApps.add(app);
       }
     }
