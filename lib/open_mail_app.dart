@@ -129,9 +129,9 @@ class OpenMailApp {
     } else if (_isIOS) {
       final apps = await _getIosMailApps();
       if (apps.length == 1) {
-        final result = await launch(
-          apps.first.iosLaunchScheme,
-          forceSafariVC: false,
+        final result = await launchUrl(
+          Uri.parse(apps.first.iosLaunchScheme),
+          mode: LaunchMode.platformDefault,
         );
         return OpenMailAppResult(didOpen: result);
       } else {
@@ -170,9 +170,9 @@ class OpenMailApp {
         String? launchScheme =
             installedApps.first.composeLaunchScheme(emailContent);
         if (launchScheme != null) {
-          result = await launch(
-            launchScheme,
-            forceSafariVC: false,
+          result = await launchUrl(
+            Uri.parse(launchScheme),
+            mode: LaunchMode.platformDefault,
           );
         }
         return OpenMailAppResult(didOpen: result);
@@ -209,9 +209,9 @@ class OpenMailApp {
     } else if (_isIOS) {
       String? launchScheme = mailApp.composeLaunchScheme(emailContent);
       if (launchScheme != null) {
-        return await launch(
-          launchScheme,
-          forceSafariVC: false,
+        return await launchUrl(
+          Uri.parse(launchScheme),
+          mode: LaunchMode.platformDefault,
         );
       }
 
@@ -232,9 +232,9 @@ class OpenMailApp {
           false;
       return result;
     } else if (_isIOS) {
-      return await launch(
-        mailApp.iosLaunchScheme,
-        forceSafariVC: false,
+      return await launchUrl(
+        Uri.parse(mailApp.iosLaunchScheme),
+        mode: LaunchMode.platformDefault,
       );
     } else {
       throw Exception('Platform not supported');
@@ -261,7 +261,8 @@ class OpenMailApp {
     if (appsJson != null) {
       apps = (jsonDecode(appsJson) as Iterable)
           .map((x) => MailApp.fromJson(x))
-          .where((app) => !filterList.any((filter) => app.name.toLowerCase().contains(filter)))
+          .where((app) => !_filterList
+              .any((filter) => app.name.toLowerCase().contains(filter)))
           .toList();
     }
 
@@ -271,8 +272,9 @@ class OpenMailApp {
   static Future<List<MailApp>> _getIosMailApps() async {
     var installedApps = <MailApp>[];
     for (var app in _supportedMailApps) {
-      if (await canLaunch(app.iosLaunchScheme) &&
-          !filterList.any((filter) => app.name.toLowerCase().contains(filter))) {
+      if (await canLaunchUrl(Uri.parse(app.iosLaunchScheme)) &&
+          !_filterList
+              .any((filter) => app.name.toLowerCase().contains(filter))) {
         installedApps.add(app);
       }
     }
