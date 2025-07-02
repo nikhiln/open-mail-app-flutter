@@ -48,6 +48,7 @@ class OpenMailAppPlugin : FlutterPlugin, MethodCallHandler {
             val firstAppIntent = packageManager.getLaunchIntentForPackage(firstApp)
 
             val chooserIntent = Intent.createChooser(firstAppIntent, chooserTitle)
+            chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             applicationContext.startActivity(chooserIntent)
             return true
         }
@@ -63,6 +64,7 @@ class OpenMailAppPlugin : FlutterPlugin, MethodCallHandler {
             ?: return false
 
         val intent = packageManager.getLaunchIntentForPackage(selectedApp.activityInfo.packageName) ?: return false
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         applicationContext.startActivity(intent)
         return true
     }
@@ -82,6 +84,7 @@ class OpenMailAppPlugin : FlutterPlugin, MethodCallHandler {
 
         if (emailApps.isNotEmpty()) {
             val chooserIntent = Intent.createChooser(emailIntent, chooserTitle)
+            chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             applicationContext.startActivity(chooserIntent)
             return true
         }
@@ -105,6 +108,7 @@ class OpenMailAppPlugin : FlutterPlugin, MethodCallHandler {
             ?: return false
 
         emailIntent.setPackage(selectedApp.activityInfo.packageName)
+        emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         applicationContext.startActivity(emailIntent)
         return true
     }
